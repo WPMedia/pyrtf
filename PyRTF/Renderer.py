@@ -325,8 +325,6 @@ class Renderer:
         else:
             self._fout.write(data)
 
-        self._fout.write(data)
-
     def _WriteDocument(self):
         settings = Settings()
 
