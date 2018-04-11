@@ -2,6 +2,7 @@ from binascii import hexlify
 
 from PyRTF.document.base import RawCode
 
+from os.path import splitext
 
 def _get_jpg_dimensions(fin):
     """
@@ -32,28 +33,29 @@ def _get_jpg_dimensions(fin):
     ]
 
     def get_length():
-        b1 = fin.read(1)
-        b2 = fin.read(1)
+        b1 = ord(fin.read(1))
+        b2 = ord(fin.read(1))
         return (b1 << 8) + b2
 
     def next_marker():
         #  markers come straight after an 0xFF so skip everything
         #  up to the first 0xFF that we find
-        while fin.read(1) != M_FF:
+        while ord(fin.read(1)) != M_FF:
             pass
 
         #  there can be more than one 0xFF as they can be used
         #  for padding so we are now looking for the first byte
         #  that isn't an 0xFF, this will be the marker
         while True:
-            result = fin.read(1)
+            result = ord(fin.read(1))
             if result != M_FF:
                 return result
 
         raise Exception('Invalid JPEG')
 
     #  BODY OF THE FUNCTION
-    if not ((fin.read(1) == M_FF) and (fin.read(1) == M_SOI)):
+    if not ((ord(fin.read(1)) == M_FF) and (ord(fin.read(1)) == M_SOI)):
+
         raise Exception('Invalid Jpeg')
 
     while True:
@@ -101,13 +103,14 @@ class Image(RawCode):
 
     PNG_LIB = 'pngblip'
     JPG_LIB = 'jpegblip'
-    PICT_TYPES = {'png': PNG_LIB, 'jpg': JPG_LIB}
+    PICT_TYPES = {'png': PNG_LIB, 'jpg': JPG_LIB, 'jpeg': JPG_LIB}
 
     def __init__(self, file_name, **kwargs):
 
         fin = open(file_name, 'rb')
 
-        pict_type = self.PICT_TYPES[file_name[-3:].lower()]
+        pict_type = self.PICT_TYPES[splitext(file_name.lower())[-1].replace('.', '')]
+
         if pict_type == self.PNG_LIB:
             width, height = _get_png_dimensions(fin.read(100))
         else:
