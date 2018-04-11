@@ -316,6 +316,13 @@ class Renderer:
         #----------------------------------
 
         if params: data = data % params
+        if isinstance(self._fout, io.BytesIO) and isinstance(data, str):
+            self._fout.write(data.encode())
+        # elif isinstance(self._fout, io.StringIO) and isinstance(data, bytes):
+        #     self._fout.write(data.decode())
+        else:
+            self._fout.write(data)
+
         self._fout.write(data)
 
     def _WriteDocument(self):
