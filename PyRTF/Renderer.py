@@ -11,6 +11,8 @@ from PyRTF.document.character import Text, Inline
 from PyRTF.document.paragraph import Paragraph, Table, Cell
 from PyRTF.object.picture import Image
 
+import io
+
 DEFAULT_TAB_WIDTH = 720
 
 ParagraphAlignmentMap = {
