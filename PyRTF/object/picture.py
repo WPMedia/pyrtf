@@ -134,7 +134,7 @@ class Image(RawCode):
         for i in range(0, len(image), 128):
             data.append(image[i:i + 128])
 
-        data = r'{\pict{\%s}%s}' % ('\\'.join(codes), b'\n'.join(data))
+        data = r'{\pict{\%s}%s}' % ('\\'.join(codes), b'\n'.join(data).decode())
         RawCode.__init__(self, data)
 
     def ToRawCode(self, var_name):
